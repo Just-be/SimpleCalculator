@@ -66,19 +66,30 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.85"/>
 
-    <TextView
-        android:id="@+id/calcArea"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="0"
-        android:textColor="@color/white"
-        android:textSize="60sp"
-        android:maxLines="1"
-        android:gravity="right|center"
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal1"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/calcArea"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="60sp"
+            android:maxLines="1"
+            android:gravity="right|center"
+            android:layout_weight="1.0"
+            app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal1"
+            app:layout_constraintStart_toStartOf="parent" />
+    </ScrollView>
 
     <Button
         android:id="@+id/btnDeleteAll"
@@ -154,7 +165,8 @@
         app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal2"
         app:layout_constraintLeft_toRightOf="@id/guideline75"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal1" />
+        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal1"
+        android:onClick="writeDivide"/>
 
     <Button
         android:id="@+id/btnSeven"
@@ -229,7 +241,8 @@
         app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal3"
         app:layout_constraintLeft_toRightOf="@id/guideline75"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal2" />
+        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal2"
+        android:onClick="writeMultiply"/>
 
     <Button
         android:id="@+id/btnFour"
@@ -304,7 +317,8 @@
         app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal4"
         app:layout_constraintLeft_toRightOf="@id/guideline75"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal3" />
+        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal3"
+        android:onClick="writeMinus"/>
 
     <Button
         android:id="@+id/btnOne"
@@ -379,7 +393,8 @@
         app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal5"
         app:layout_constraintLeft_toRightOf="@id/guideline75"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal4" />
+        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal4"
+        android:onClick="writePlus"/>
 
     <Button
         android:id="@+id/btnRotate"
@@ -448,6 +463,7 @@
         app:backgroundTint="#03A9F4"
         app:layout_constraintLeft_toRightOf="@id/guideline75"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal5" />
+        app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal5"
+        android:onClick="calc"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
