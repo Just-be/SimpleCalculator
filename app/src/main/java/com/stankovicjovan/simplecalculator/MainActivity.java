@@ -1,20 +1,31 @@
 package com.stankovicjovan.simplecalculator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.stankovicjovan.simplecalculator.databinding.ActivityMainBinding;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     //everything that is written in calculation area
     private TextView calcArea;
+    //button for writing . on the calculation area
+    private Button dotButton;
 
-    public static double eval(final String str) {
+    private ActivityMainBinding binding;
+    private History history;
+
+    public static double eval(final String str) throws RuntimeException, InvocationTargetException {
         return new Object() {
             int pos = -1, ch;
 
@@ -91,9 +102,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        history = History.getInstance();
+
+        //history.addCalcHistory("0");
+        //history.addCalcHistory("1");
+        //history.addCalcHistory("2");
+        //history.addCalcHistory("3");
+
+        binding.setHistory(history);
 
         calcArea = findViewById(R.id.calcArea);
+        dotButton = findViewById(R.id.btnDot);
     }
 
     public void writeSeven(View view) {
@@ -178,11 +198,14 @@ public class MainActivity extends AppCompatActivity {
     //delete everything from calc area and write "0"
     public void deleteAll(View view) {
         this.calcArea.setText("0");
+        dotButton.setEnabled(true);
     }
 
     //deletes last character from calc area
     public void deleteLastChar(){
         String currCalcArea = this.calcArea.getText().toString();
+        if(currCalcArea.charAt(currCalcArea.length()-1) == '.')
+            dotButton.setEnabled(true);
         this.calcArea.setText(currCalcArea.substring(0, currCalcArea.length()-1));
     }
 
@@ -196,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        //otherwise delete the last digit of the given number (working with Strings)
+        //otherwise delete the last character of the given input (working with Strings)
         if(currCalcArea != null && currCalcArea.length() > 1) {
             deleteLastChar();
         }
@@ -226,22 +249,39 @@ public class MainActivity extends AppCompatActivity {
 
     public void writePlus(View view) {
         writeSymbol('+');
+        dotButton.setEnabled(true);
     }
 
     public void writeMinus(View view) {
         writeSymbol('-');
+        dotButton.setEnabled(true);
     }
 
     public void writeMultiply(View view) {
         writeSymbol('×');
+        dotButton.setEnabled(true);
     }
 
     public void writeDivide(View view) {
         writeSymbol('÷');
+        dotButton.setEnabled(true);
+    }
+
+    public void writeDot(View view) {
+        String currCalcArea = calcArea.getText().toString();
+        if(currCalcArea.charAt(currCalcArea.length()-1) != '.'){
+            this.calcArea.append(".");
+            //once the dot is clicked it's not longer clickable until the user enters operator
+            //this way we avoid the errors
+            dotButton.setEnabled(false);
+        }
     }
 
     public void calc(View view) {
         String exp = this.calcArea.getText().toString();
+
+        //eval recognizes * and / instead of × and ÷
+        // so I need to replace all occurrences of those symbols
         String newExp = exp.replaceAll("×", "*");
         exp = newExp.replaceAll("÷", "/");
 
@@ -252,18 +292,67 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Double calcExp = eval(exp);
+        //resolving exceptions (when user evaluates unknown expression)
+        Double calcExp = null;
+        try {
+            calcExp = eval(exp);
+        } catch (InvocationTargetException e) {
+            String message = Integer.toString(R.string.invalid_expression);
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            deleteAll(view);
+            return;
+        } catch (RuntimeException e) {
+            String message = Integer.toString(R.string.invalid_expression);
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            deleteAll(view);
+            return;
+        }
+
+        //TODO logic for number restriction
         int intCalcExp = calcExp.intValue();
         if(intCalcExp == Integer.MAX_VALUE) {
             this.calcArea.setText(Double.toString(calcExp));
             return;
         }
 
+        //historyText is what is going to be written in the history
+        String historyText = calcArea.getText().toString();
+        String resultInt = Integer.toString(intCalcExp);
+        String resultDouble = Double.toString(calcExp);
+
+        //calculated value can be either whole number or decimal
+        //and we need to set historyText according to that
         if(calcExp % 1 == 0){
-            this.calcArea.setText(Integer.toString(intCalcExp));
+            this.calcArea.setText(resultInt);
+            historyText = historyText + "=" + resultInt;
+            history.addCalcHistory(historyText);
+            binding.setHistory(history);
+            next(view);
         } else {
-            this.calcArea.setText(Double.toString(calcExp));
+            this.calcArea.setText(resultDouble);
+            historyText = historyText + "=" + resultDouble;
+            history.addCalcHistory(historyText);
+            binding.setHistory(history);
+            next(view);
         }
 
+    }
+
+    //logic when user clicks previous button
+    public void prev(View view) {
+        if(history.getCurrent() > 0) {
+            history.currentDecrement();
+            binding.setHistory(history);
+        }
+    }
+
+    //logic when user clicks next button
+    public void next(View view) {
+        if(history.getCurrent() < history.getSize() - 1) {
+            history.currentIncrement();
+            binding.setHistory(history);
+        }
     }
 }

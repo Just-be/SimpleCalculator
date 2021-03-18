@@ -20,4 +20,7 @@
     <string name="rotate_sign">R</string>
     <string name="zero_sign">0</string>
     <string name="dot_sign">.</string>
+    <string name="invalid_expression">Invalid expression</string>
+    <string name="lt"><![CDATA[<]]></string>
+    <string name="gt"><![CDATA[>]]></string>
 </resources>
