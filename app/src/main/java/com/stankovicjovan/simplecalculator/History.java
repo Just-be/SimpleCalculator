@@ -42,4 +42,10 @@ public class History {
     public void currentDecrement(){
         current--;
     }
+
+    public void clearHistory(){
+        calcHistory.clear();
+        addCalcHistory("");
+        current = 0;
+    }
 }

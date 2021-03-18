@@ -105,6 +105,8 @@
             android:textSize="20sp"
             android:textColor="@color/gray"
             android:gravity="center"
+            android:maxLines="3"
+            android:scrollbars="vertical"
             android:text="@{history.getCalcHistory(history.current)}"
             app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal0"
             app:layout_constraintLeft_toRightOf="@id/btnPrev"
@@ -129,30 +131,27 @@
             android:onClick="next"/>
 
         <ScrollView
-            android:id="@+id/SCROLLER_ID"
-            android:layout_width="fill_parent"
+            android:id="@+id/calcAreaScroll"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fillViewport="true"
-            android:scrollbars="vertical"
             app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal1"
             app:layout_constraintStart_toStartOf="parent">
-
             <TextView
                 android:id="@+id/calcArea"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_weight="1.0"
-                android:gravity="end|center"
+                android:layout_marginStart="16dp"
+                android:gravity="end|bottom"
                 android:maxLines="1"
                 android:text="@string/zero_sign"
                 android:textColor="@color/white"
                 android:textSize="60sp"
                 app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal1"
-                app:layout_constraintStart_toStartOf="parent" />
-        </ScrollView>
+                app:layout_constraintStart_toStartOf="parent"
+                android:scrollbars="vertical"/>
 
+        </ScrollView>
         <Button
             android:id="@+id/btnDeleteAll"
             android:layout_width="70dp"
@@ -473,7 +472,8 @@
             app:backgroundTint="#000000"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/guideline25"
-            app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal5" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal5"
+            android:onClick="clearHistory"/>
 
         <Button
             android:id="@+id/btnZero"

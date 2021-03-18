@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView calcArea;
     //button for writing . on the calculation area
     private Button dotButton;
+    //history area
+    private TextView historyArea;
 
     private ActivityMainBinding binding;
     private History history;
@@ -105,14 +109,16 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         history = History.getInstance();
 
-        //history.addCalcHistory("0");
-        //history.addCalcHistory("1");
-        //history.addCalcHistory("2");
-        //history.addCalcHistory("3");
-
         binding.setHistory(history);
 
         calcArea = findViewById(R.id.calcArea);
+
+        //calc area should scroll when the expression is too big
+        calcArea.setMovementMethod(new ScrollingMovementMethod());
+
+        historyArea = findViewById(R.id.historyArea);
+        historyArea.setMovementMethod(new ScrollingMovementMethod());
+
         dotButton = findViewById(R.id.btnDot);
     }
 
@@ -297,30 +303,39 @@ public class MainActivity extends AppCompatActivity {
         try {
             calcExp = eval(exp);
         } catch (InvocationTargetException e) {
-            String message = Integer.toString(R.string.invalid_expression);
+            String message = getApplicationContext().getString(R.string.invalid_expression) + "";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             e.printStackTrace();
             deleteAll(view);
             return;
         } catch (RuntimeException e) {
-            String message = Integer.toString(R.string.invalid_expression);
+            String message = getApplicationContext().getString(R.string.invalid_expression) + "";
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             e.printStackTrace();
             deleteAll(view);
             return;
         }
 
-        //TODO logic for number restriction
         int intCalcExp = calcExp.intValue();
-        if(intCalcExp == Integer.MAX_VALUE) {
-            this.calcArea.setText(Double.toString(calcExp));
-            return;
-        }
 
         //historyText is what is going to be written in the history
         String historyText = calcArea.getText().toString();
         String resultInt = Integer.toString(intCalcExp);
         String resultDouble = Double.toString(calcExp);
+
+        //if the calculated value is too high only this block of code is executed..
+        if(intCalcExp == Integer.MAX_VALUE) {
+            this.calcArea.setText(resultDouble);
+            historyText = historyText + "=" + resultDouble;
+            history.addCalcHistory(historyText);
+            binding.setHistory(history);
+            next(view);
+            calcArea.scrollTo(0,0);
+            historyArea.scrollTo(0,0);
+            calcArea.setText("0");
+            lastHistoryResult(view);
+            return;
+        }
 
         //calculated value can be either whole number or decimal
         //and we need to set historyText according to that
@@ -329,15 +344,19 @@ public class MainActivity extends AppCompatActivity {
             historyText = historyText + "=" + resultInt;
             history.addCalcHistory(historyText);
             binding.setHistory(history);
-            next(view);
+            lastHistoryResult(view);
+
         } else {
             this.calcArea.setText(resultDouble);
             historyText = historyText + "=" + resultDouble;
             history.addCalcHistory(historyText);
             binding.setHistory(history);
-            next(view);
+            lastHistoryResult(view);
         }
 
+        calcArea.scrollTo(0,0);
+        historyArea.scrollTo(0,0);
+        calcArea.setText("0");
     }
 
     //logic when user clicks previous button
@@ -353,6 +372,20 @@ public class MainActivity extends AppCompatActivity {
         if(history.getCurrent() < history.getSize() - 1) {
             history.currentIncrement();
             binding.setHistory(history);
+        }
+    }
+
+    public void clearHistory(View view) {
+        history.clearHistory();
+        binding.setHistory(history);
+    }
+
+    //user is always taken to the last result no matter where he is in history
+    public void lastHistoryResult(View view){
+        int i = 0;
+        while(i < history.getCurrent()+1){
+            next(view);
+            i++;
         }
     }
 }
