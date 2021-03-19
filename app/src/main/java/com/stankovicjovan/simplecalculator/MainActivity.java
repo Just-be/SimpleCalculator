@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
                     else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
                     else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
+                    else if (func.equals("log")) x = Math.log10(x);
                     else throw new RuntimeException("Unknown function: " + func);
                 } else {
                     throw new RuntimeException("Unexpected: " + (char)ch);
@@ -243,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //if last character is a number simply append the symbol...
-        if(currChar >= '0' && currChar <= '9'){
+        if((currChar >= '0' && currChar <= '9') || currChar == '(' || currChar == ')'){
             this.calcArea.append("" + symbol);
         }
         //...and if it's not delete the previous symbol and write a new one
@@ -391,12 +392,90 @@ public class MainActivity extends AppCompatActivity {
         binding.setHistory(history);
     }
 
-    //user is always taken to the last result no matter where he is in history
+    //user is always taken to the last result when submitting new expression
+    // no matter where he is in history
     public void lastHistoryResult(View view){
         int i = 0;
         while(i < history.getCurrent()+1){
             next(view);
             i++;
+        }
+    }
+
+    public void writeBracketLeft(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("(");
+        } else {
+            this.calcArea.append("(");
+        }
+    }
+
+    public void writeBracketRight(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText(")");
+        } else {
+            this.calcArea.append(")");
+        }
+    }
+
+    public void writeExponent(View view) {
+        writeSymbol('^');
+        dotButton.setEnabled(true);
+    }
+
+    public void writeE(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("2.71828183");
+        } else {
+            this.calcArea.append("2.71828183");
+        }
+    }
+
+    public void convertToDecimal(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("^(-1)");
+        } else {
+            this.calcArea.append("^(-1)");
+        }
+    }
+
+    public void writePi(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("3.14159265");
+        } else {
+            this.calcArea.append("3.14159265");
+        }
+    }
+
+    public void writeSin(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("sin(");
+        } else {
+            this.calcArea.append("sin(");
+        }
+    }
+
+    public void writeCos(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("cos(");
+        } else {
+            this.calcArea.append("cos(");
+        }
+    }
+
+    public void writeTan(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("tan(");
+        } else {
+            this.calcArea.append("tan(");
+        }
+    }
+
+    public void writeLog(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("log(");
+        } else {
+            this.calcArea.append("log(");
         }
     }
 }
