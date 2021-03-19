@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Simple Calculator</string>
+    <string name="app_name">Једноставан калкулатор</string>
     <string name="equals_sign">=</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
@@ -20,8 +21,8 @@
     <string name="delete_history_sign">R</string>
     <string name="zero_sign">0</string>
     <string name="dot_sign">.</string>
-    <string name="invalid_expression">Invalid expression</string>
+    <string name="invalid_expression">Израз који сте унели није валидан</string>
     <string name="lt"><![CDATA[<]]></string>
     <string name="gt"><![CDATA[>]]></string>
-    <string name="history_text">History</string>
+    <string name="history_text">Историја</string>
 </resources>

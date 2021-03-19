@@ -273,6 +273,14 @@ public class MainActivity extends AppCompatActivity {
         dotButton.setEnabled(true);
     }
 
+    public void writeSqrt(View view) {
+        if(this.calcArea.getText().toString().equals("0")) {
+            this.calcArea.setText("√");
+        } else {
+            this.calcArea.append("√");
+        }
+    }
+
     public void writeDot(View view) {
         String currCalcArea = calcArea.getText().toString();
         if(currCalcArea.charAt(currCalcArea.length()-1) != '.'){
@@ -289,7 +297,8 @@ public class MainActivity extends AppCompatActivity {
         //eval recognizes * and / instead of × and ÷
         // so I need to replace all occurrences of those symbols
         String newExp = exp.replaceAll("×", "*");
-        exp = newExp.replaceAll("÷", "/");
+        String newExp1 = newExp.replaceAll("÷", "/");
+        exp = newExp1.replaceAll("√", "sqrt");
 
         //eval can return NaN or Infinity when we divide 0/0 or any number/0
         //if it does, we can't continue, but instead set calc area to 0 and return
@@ -361,7 +370,9 @@ public class MainActivity extends AppCompatActivity {
 
     //logic when user clicks previous button
     public void prev(View view) {
-        if(history.getCurrent() > 0) {
+        //we are not going to include empty character when user goes through history
+        //that's why we are checking if the current is bigger than 1
+        if(history.getCurrent() > 1) {
             history.currentDecrement();
             binding.setHistory(history);
         }

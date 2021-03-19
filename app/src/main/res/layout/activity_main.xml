@@ -6,8 +6,7 @@
     <data>
         <variable
             name="history"
-            type="com.stankovicjovan.simplecalculator.History"
-            />
+            type="com.stankovicjovan.simplecalculator.History" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -99,14 +98,26 @@
             android:onClick="prev"/>
 
         <TextView
+            android:id="@+id/history_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/history_text"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/historyArea"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
             android:id="@+id/historyArea"
             android:layout_width="0dp"
             android:layout_height="70dp"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/gray"
             android:gravity="center"
             android:maxLines="3"
             android:scrollbars="vertical"
+            android:fadeScrollbars="false"
             android:text="@{history.getCalcHistory(history.current)}"
             app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal0"
             app:layout_constraintLeft_toRightOf="@id/btnPrev"
@@ -142,6 +153,8 @@
                 android:layout_height="100dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
                 android:gravity="end|bottom"
                 android:maxLines="1"
                 android:text="@string/zero_sign"
@@ -149,9 +162,9 @@
                 android:textSize="60sp"
                 app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal1"
                 app:layout_constraintStart_toStartOf="parent"
-                android:scrollbars="vertical"/>
-
+                android:scrollbars="vertical" />
         </ScrollView>
+
         <Button
             android:id="@+id/btnDeleteAll"
             android:layout_width="70dp"
@@ -193,7 +206,7 @@
             app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal1" />
 
         <Button
-            android:id="@+id/btnPercent"
+            android:id="@+id/btnSqrt"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="8dp"
@@ -201,7 +214,8 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/round_button_selector"
-            android:text="@string/percent_sign"
+            android:onClick="writeSqrt"
+            android:text="@string/sqrt_sign"
             android:textColor="#2196F3"
             android:textSize="35sp"
             app:backgroundTint="#000000"
@@ -227,7 +241,7 @@
             app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal2"
             app:layout_constraintLeft_toRightOf="@id/guideline75"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal1" />
+            app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal1"/>
 
         <Button
             android:id="@+id/btnSeven"
@@ -458,7 +472,7 @@
             app:layout_constraintTop_toBottomOf="@id/guidelineHorizontal4" />
 
         <Button
-            android:id="@+id/btnRotate"
+            android:id="@+id/btnDeleteHistory"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="8dp"
@@ -466,7 +480,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/round_button_selector"
-            android:text="@string/rotate_sign"
+            android:text="@string/delete_history_sign"
             android:textColor="#2196F3"
             android:textSize="35sp"
             app:backgroundTint="#000000"
