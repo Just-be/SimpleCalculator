@@ -1,9 +1,13 @@
 package com.stankovicjovan.simplecalculator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Layout;
+import android.text.Selection;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -21,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     //everything that is written in calculation area
     private TextView calcArea;
-    //button for writing . on the calculation area
-    private Button dotButton;
     //history area
     private TextView historyArea;
 
@@ -116,109 +118,130 @@ public class MainActivity extends AppCompatActivity {
 
         //calc area should scroll when the expression is too big
         calcArea.setMovementMethod(new ScrollingMovementMethod());
+        calcArea.setHorizontallyScrolling(true);
 
         historyArea = findViewById(R.id.historyArea);
         historyArea.setMovementMethod(new ScrollingMovementMethod());
 
-        dotButton = findViewById(R.id.btnDot);
+        if(savedInstanceState != null){
+
+            String calcArea = savedInstanceState.getString(C.tag.KEY_CALC_AREA);
+            String historyArea = savedInstanceState.getString(C.tag.KEY_HISTORY_AREA);
+            if(calcArea != null && historyArea != null){
+                this.calcArea.setText(calcArea);
+                this.historyArea.setText(historyArea);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        if(calcArea != null && historyArea != null){
+            outState.putString(C.tag.KEY_CALC_AREA, calcArea.getText().toString());
+            outState.putString(C.tag.KEY_HISTORY_AREA, historyArea.getText().toString());
+        }
+        super.onSaveInstanceState(outState);
     }
 
     public void writeSeven(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("7");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("7");
         } else {
-            this.calcArea.append("7");
+            calcArea.append("7");
         }
     }
 
     public void writeEight(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("8");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("8");
         } else {
-            this.calcArea.append("8");
+            calcArea.append("8");
         }
     }
 
     public void writeNine(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("9");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("9");
         } else {
-            this.calcArea.append("9");
+            calcArea.append("9");
         }
     }
 
     public void writeFour(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("4");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("4");
         } else {
-            this.calcArea.append("4");
+            calcArea.append("4");
         }
     }
 
     public void writeFive(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("5");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("5");
         } else {
-            this.calcArea.append("5");
+            calcArea.append("5");
         }
     }
 
     public void writeSix(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("6");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("6");
         } else {
-            this.calcArea.append("6");
+            calcArea.append("6");
         }
     }
 
     public void writeOne(View view) {
 
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("1");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("1");
         } else {
-            this.calcArea.append("1");
+            calcArea.append("1");
         }
     }
 
     public void writeTwo(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("2");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("2");
         } else {
-            this.calcArea.append("2");
+            calcArea.append("2");
         }
     }
 
     public void writeThree(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("3");
+        if(calcArea.getText().toString().equals("0")) {
+            calcArea.setText("3");
         } else {
-            this.calcArea.append("3");
+            calcArea.append("3");
         }
     }
 
     public void writeZero(View view) {
-        if(!this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.append("0");
+        if(!calcArea.getText().toString().equals("0")) {
+            calcArea.append("0");
         }
     }
 
     //delete everything from calc area and write "0"
     public void deleteAll(View view) {
-        this.calcArea.setText("0");
-        dotButton.setEnabled(true);
+        calcArea.setText("0");
+        calcArea.scrollTo(0,0);
     }
 
     //deletes last character from calc area
     public void deleteLastChar(){
-        String currCalcArea = this.calcArea.getText().toString();
-        if(currCalcArea.charAt(currCalcArea.length()-1) == '.')
-            dotButton.setEnabled(true);
-        this.calcArea.setText(currCalcArea.substring(0, currCalcArea.length()-1));
+        String currCalcArea = calcArea.getText().toString();
+        calcArea.setText(currCalcArea.substring(0, currCalcArea.length()-1));
+
+        //as I delete character by character I want calcArea to move automatically
+        int position = calcArea.length();
+        Editable etext = (Editable) calcArea.getText();
+        Selection.setSelection(etext, position);
     }
 
     public void deleteOne(View view) {
 
-        String currCalcArea = this.calcArea.getText().toString();
+        String currCalcArea = calcArea.getText().toString();
 
         //deleting the last number writes "0" in the calc area
         if(currCalcArea.length() == 1) {
@@ -232,68 +255,68 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //for numbers and +, -, *, /, ^
     public void writeSymbol(char symbol) {
-        String currCalcArea = this.calcArea.getText().toString();
+        String currCalcArea = calcArea.getText().toString();
         char currChar = currCalcArea.charAt(currCalcArea.length()-1);
 
         //if user decides to write - at beginning of expression we need to delete the starting 0
         if(symbol == '-' && currCalcArea.length() == 1 && currChar == '0') {
             deleteLastChar();
-            this.calcArea.append("" + symbol);
+            calcArea.append("" + symbol);
             return;
         }
 
-        //if last character is a number simply append the symbol...
+        //if last character is a number or left brace or right brace simply append the symbol
         if((currChar >= '0' && currChar <= '9') || currChar == '(' || currChar == ')'){
-            this.calcArea.append("" + symbol);
+            calcArea.append("" + symbol);
         }
         //...and if it's not delete the previous symbol and write a new one
         else {
             deleteLastChar();
-            this.calcArea.append("" + symbol);
+            calcArea.append("" + symbol);
+        }
+    }
+
+    //for every other symbol
+    public void writeSign(String sign){
+        if(calcArea.getText().toString().equals("0")) {
+            if(sign.equals(".")) {
+                calcArea.append(sign);
+                return;
+            }
+            calcArea.setText(sign);
+        } else {
+            calcArea.append(sign);
         }
     }
 
     public void writePlus(View view) {
         writeSymbol('+');
-        dotButton.setEnabled(true);
     }
 
     public void writeMinus(View view) {
         writeSymbol('-');
-        dotButton.setEnabled(true);
     }
 
     public void writeMultiply(View view) {
         writeSymbol('×');
-        dotButton.setEnabled(true);
     }
 
     public void writeDivide(View view) {
         writeSymbol('÷');
-        dotButton.setEnabled(true);
     }
 
     public void writeSqrt(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("√");
-        } else {
-            this.calcArea.append("√");
-        }
+        writeSign("√");
     }
 
     public void writeDot(View view) {
-        String currCalcArea = calcArea.getText().toString();
-        if(currCalcArea.charAt(currCalcArea.length()-1) != '.'){
-            this.calcArea.append(".");
-            //once the dot is clicked it's not longer clickable until the user enters operator
-            //this way we avoid the errors
-            dotButton.setEnabled(false);
-        }
+        writeSign(".");
     }
 
     public void calc(View view) {
-        String exp = this.calcArea.getText().toString();
+        String exp = calcArea.getText().toString();
 
         //eval recognizes * and / instead of × and ÷
         // so I need to replace all occurrences of those symbols
@@ -304,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
         //eval can return NaN or Infinity when we divide 0/0 or any number/0
         //if it does, we can't continue, but instead set calc area to 0 and return
         if(exp.equals("NaN") || exp.equals("Infinity")){
-            this.calcArea.setText("0");
+            calcArea.setText("0");
             return;
         }
 
@@ -335,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
 
         //if the calculated value is too high only this block of code is executed..
         if(intCalcExp == Integer.MAX_VALUE) {
-            this.calcArea.setText(resultDouble);
+            calcArea.setText(resultDouble);
             historyText = historyText + "=" + resultDouble;
             history.addCalcHistory(historyText);
             binding.setHistory(history);
@@ -350,14 +373,14 @@ public class MainActivity extends AppCompatActivity {
         //calculated value can be either whole number or decimal
         //and we need to set historyText according to that
         if(calcExp % 1 == 0){
-            this.calcArea.setText(resultInt);
+            calcArea.setText(resultInt);
             historyText = historyText + "=" + resultInt;
             history.addCalcHistory(historyText);
             binding.setHistory(history);
             lastHistoryResult(view);
 
         } else {
-            this.calcArea.setText(resultDouble);
+            calcArea.setText(resultDouble);
             historyText = historyText + "=" + resultDouble;
             history.addCalcHistory(historyText);
             binding.setHistory(history);
@@ -403,79 +426,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void writeBracketLeft(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("(");
-        } else {
-            this.calcArea.append("(");
-        }
+        writeSign("(");
     }
 
     public void writeBracketRight(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText(")");
-        } else {
-            this.calcArea.append(")");
-        }
+        writeSign(")");
     }
 
     public void writeExponent(View view) {
         writeSymbol('^');
-        dotButton.setEnabled(true);
     }
 
     public void writeE(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("2.71828183");
-        } else {
-            this.calcArea.append("2.71828183");
-        }
+        writeSign("2.71828183");
     }
 
     public void convertToDecimal(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("^(-1)");
-        } else {
-            this.calcArea.append("^(-1)");
-        }
+        writeSign("^(-1)");
     }
 
     public void writePi(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("3.14159265");
-        } else {
-            this.calcArea.append("3.14159265");
-        }
+        writeSign("3.14159265");
     }
 
     public void writeSin(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("sin(");
-        } else {
-            this.calcArea.append("sin(");
-        }
+        writeSign("sin(");
     }
 
     public void writeCos(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("cos(");
-        } else {
-            this.calcArea.append("cos(");
-        }
+        writeSign("cos(");
     }
 
     public void writeTan(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("tan(");
-        } else {
-            this.calcArea.append("tan(");
-        }
+        writeSign("tan(");
     }
 
     public void writeLog(View view) {
-        if(this.calcArea.getText().toString().equals("0")) {
-            this.calcArea.setText("log(");
-        } else {
-            this.calcArea.append("log(");
-        }
+        writeSign("log(");
     }
 }

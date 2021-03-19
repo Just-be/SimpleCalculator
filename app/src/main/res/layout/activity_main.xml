@@ -155,13 +155,13 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginEnd="16dp"
-                android:gravity="end|bottom"
+                android:gravity="left|bottom"
                 android:text="@string/zero_sign"
                 android:textColor="@color/white"
                 android:textSize="60sp"
                 app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal1"
                 app:layout_constraintStart_toStartOf="parent"
-                android:scrollbars="vertical" />
+                android:scrollbars="horizontal" />
         </ScrollView>
 
         <Button
